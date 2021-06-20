@@ -1,0 +1,19 @@
+<table >
+    <thead>
+        <tr>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {{#each list}}
+        <tr>
+            <td>{{list.username}}</td>
+            <td>{{list.firstname}}</td>
+            <td>{{list.lastname}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
