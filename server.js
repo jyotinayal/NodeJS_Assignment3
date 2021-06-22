@@ -143,21 +143,21 @@ app.post('/api/login', async (req, res) => {
 		// 		"token": token,
 		// 		"message": "login successful"
 		// 	})
-		// 	let clientIp = requestIp.getClientIp(req);
-		// 	let activityDate = moment().format("MM-DD-YYYY");
-		// 	console.log("date",activityDate);
-		// 	let source = req.headers['user-agent'],
-		// 	ua = useragent.parse(source);
-		// 	console.log("user",ua);
+			let clientIp = requestIp.getClientIp(req);
+			let activityDate = moment().format("MM-DD-YYYY");
+			console.log("date",activityDate);
+			let source = req.headers['user-agent'],
+			ua = useragent.parse(source);
+			console.log("user",ua);
 
-		// // var activity = new activityData();
-		// 	let activity =  UserActivity.create( {
-		// 		userName: username,
-		// 		IP : clientIp,
-		// 		UA : ua,
-		// 		loginDate : activityDate
-		// 	})
-		// 	console.log('UserActvity stored successfully: ', activity)
+		// var activity = new activityData();
+			let activity =  UserActivity.create( {
+				userName: username,
+				IP : clientIp,
+				UA : ua,
+				loginDate : activityDate
+			})
+			console.log('UserActvity stored successfully: ', activity)
 		return res.json({ status: 'ok', data: token })
 	}
 
@@ -206,6 +206,9 @@ app.post('/register', async (req, res) => {
 app.use('/fetchUser', fetchUser);
 app.use('/allUsers', allUsers);
 app.use('/notLoggedIn',notLoggedIn);
+app.get('/css', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public' + 'stylesheet/main.css'))
+})
 
 app.post('/api/fetch', async (req, res) => {
 
@@ -223,6 +226,7 @@ User.find({ username : req.body.username}, (err, allDetails) => {
 })
 
 })
+
 
 app.listen(3000, () => {
 	console.log('Server up at 3000')
