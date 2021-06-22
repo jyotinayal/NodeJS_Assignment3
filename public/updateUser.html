@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="./stylesheet/main.css">
+    <title>Update User</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script>
+    <script>
+        function fetch(event) {
+            document.getElementById('userName').value = localStorage.getItem("userName");
+        }
+
+        function submitUser(event) {
+            event.preventDefault();
+            console.log("in submit")
+            var userName = document.getElementById("userName").value;
+            var password = document.getElementById("password").value;
+            var firstName = document.getElementById("firstName").value;
+            var lastName = document.getElementById("lastName").value;
+            var token = localStorage.getItem("token");
+            console.log(token)
+            $.ajax({
+                url: "http://localhost:3000/updateUser",
+                method: "POST",
+                data: {
+                    userName: userName,
+                    password: password,
+                    firstName: firstName,
+                    lastName: lastName
+                },
+                success: function (result) {
+                    console.log("REESPONSE =====>", result);
+                    alert("hello")
+                    window.location.replace('/allUsers');
+                }
+            })
+        }
+    </script>
+</head>
+
+<body onload=fetch(event)>
+    <header>
+        <nav>
+            <div class="heading">
+                <h2>User Update</h2>
+            </div>
+        </nav>
+    </header>
+    <div class="div-class">
+        <form method="POST">
+
+            <div>
+                <label for="userName">User Name</label>
+                <input type="text" class="form-control" id="userName" name="userName" readonly>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+            </div>
+            <div>
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" name="firstName">
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" name="lastName">
+            </div>
+
+            <div>
+                <input type=button onclick=submitUser(event) class="registerbtn" value="Submit" />
+            </div>
+
+
+
+        </form>
+    </div>
+
+
+</body>
+
+</html>

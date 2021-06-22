@@ -2,7 +2,6 @@ const express = require("express");
 const fetchUser = require("../controller/fetchUser");
 var path = require('path');
 const router = express.Router();
-//var authenticate = require('../middleware/authenticate');
 
 
 router.get("/", (req, res, next) => {

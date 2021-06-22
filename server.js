@@ -2,23 +2,26 @@ const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const User = require('./model/user')
-const UserActivity = require('./model/userActivity')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 var requestIp = require('request-ip');
 var moment = require('moment');
+const Handlebars = require('handlebars')
+const expressHandlebars = require('express-handlebars');
+
+
+
+const User = require('./model/user')
+const UserActivity = require('./model/userActivity')
+
 var fetchUser = require('./route/fetchUserRoute');
 var allUsers = require('./route/allUsers');
 var notLoggedIn = require('./route/notLoggedIn');
-const Handlebars = require('handlebars')
-const expressHandlebars = require('express-handlebars');
-const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
 var useragent = require('express-useragent');
 require('dotenv').config()
-//const JWT_SECRET = "jkgsfjwbnfmbwekjgfruiehgdfkjb87576we#kjk4$$$3@"
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "jkgsfjwbnfmbwekjgfruiehgdfkjb87576we#kjk4$$$3@"
+//const JWT_SECRET = process.env.JWT_SECRET;
 
 
 mongoose.connect('mongodb://localhost:27017/assignment3',{
@@ -28,11 +31,6 @@ mongoose.connect('mongodb://localhost:27017/assignment3',{
 })
 
 const app = express()
-app.engine('handlebars', expressHandlebars({
-    handlebars: allowInsecurePrototypeAccess(Handlebars)
-}));
-app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views/'));
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
@@ -72,6 +70,56 @@ app.post('/api/change-password', async (req, res) => {
 
 
 
+// app.post('/api/login', async (req, res) => {
+// 	const { username, password } = req.body
+// 	const user = await User.findOne({ username }).lean()
+// 	if (!user) {
+// 		return res.json({ status: 'error', error: 'Invalid username/password' })
+// 	}
+
+// 	if (await bcrypt.compare(password, user.password)) {
+// 		// the username, password combination is successful
+
+// 		const token = jwt.sign(
+// 		{
+// 			id: user._id,
+// 			username: user.username
+// 			},
+// 			JWT_SECRET
+// 		)
+
+// 		//  var token = jwt.sign({ id: user._id, username: user.username}, JWT_SECRET,
+//         //         {
+//         //             expiresIn: "2hr"
+//         //         });
+//             // res.send("Succesfully signed up " + req.body.userName);
+//             res.json(
+//                 {
+//                     "token": token,
+//                     "message": "login successful"
+//                 })
+//                 let clientIp = requestIp.getClientIp(req);
+//                 let activityDate = moment().format("MM-DD-YYYY");
+//                 console.log("date",activityDate);
+//                 let source = req.headers['user-agent'],
+//                 ua = useragent.parse(source);
+//                 console.log("user",ua);
+
+//                // var activity = new activityData();
+//                 let activity =  UserActivity.create( {
+//                     userName: username,
+//                     IP : clientIp,
+//                     UA : ua,
+//                     loginDate : activityDate
+//                  })
+// 				 console.log('UserActvity stored successfully: ', activity)
+// 		return res.json({ status: 'ok', data: token })
+// 	}
+
+// res.json({ status: 'error', error: 'Invalid username/password' })
+// }
+// })
+
 app.post('/api/login', async (req, res) => {
 	const { username, password } = req.body
 	const user = await User.findOne({ username }).lean()
@@ -83,46 +131,40 @@ app.post('/api/login', async (req, res) => {
 	if (await bcrypt.compare(password, user.password)) {
 		// the username, password combination is successful
 
-											// const token = jwt.sign(
-											// 	{
-											// 		id: user._id,
-											// 		username: user.username
-											// 	},
-											// 	JWT_SECRET
-											// )
+		const token = jwt.sign(
+			{
+				id: user._id,
+				username: user.username
+			},
+			JWT_SECRET
+		)
+		// res.json(
+		// 	{
+		// 		"token": token,
+		// 		"message": "login successful"
+		// 	})
+		// 	let clientIp = requestIp.getClientIp(req);
+		// 	let activityDate = moment().format("MM-DD-YYYY");
+		// 	console.log("date",activityDate);
+		// 	let source = req.headers['user-agent'],
+		// 	ua = useragent.parse(source);
+		// 	console.log("user",ua);
 
-		 var token = jwt.sign({ id: user._id, username: user.username}, JWT_SECRET,
-                {
-                    expiresIn: "2hr"
-                });
-            // res.send("Succesfully signed up " + req.body.userName);
-            res.json(
-                {
-                    "token": token,
-                    "message": "login successful"
-                })
-                let clientIp = requestIp.getClientIp(req);
-                let activityDate = moment().format("MM-DD-YYYY");
-                console.log("date",activityDate);
-                let source = req.headers['user-agent'],
-                ua = useragent.parse(source);
-                console.log("user",ua);
-
-               // var activity = new activityData();
-                let activity =  UserActivity.create( {
-                    userName: username,
-                    IP : clientIp,
-                    UA : ua,
-                    loginDate : activityDate
-                 })
-				 console.log('UserActvity stored successfully: ', activity)
+		// // var activity = new activityData();
+		// 	let activity =  UserActivity.create( {
+		// 		userName: username,
+		// 		IP : clientIp,
+		// 		UA : ua,
+		// 		loginDate : activityDate
+		// 	})
+		// 	console.log('UserActvity stored successfully: ', activity)
 		return res.json({ status: 'ok', data: token })
 	}
 
 	res.json({ status: 'error', error: 'Invalid username/password' })
 })
 
-app.post('/api/register', async (req, res) => {
+app.post('/register', async (req, res) => {
 	const { firstname, lastname, username, password: plainTextPassword } = req.body
 
 	if (!username || typeof username !== 'string') {
@@ -175,7 +217,7 @@ User.find({ username : req.body.username}, (err, allDetails) => {
     } else {
 		console.log(allDetails);
 		//res.json(allDetails)
-		res.render('/fetchUserDisplay', { list: allDetails} );
+		//res.render('/fetchUserDisplay', { list: allDetails} );
 		
     }
 })

@@ -37,9 +37,10 @@
 					// everythign went fine
 					console.log('Got the token: ', result.data)
 					localStorage.setItem('token', result.data)
+					//localStorage.setItem('userName',username)
 					alert('Success')
 				} else {
-					alert(result.error)
+					alert("Error"+result.error)
 				}
 			}
 		</script>
