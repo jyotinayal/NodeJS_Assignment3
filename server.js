@@ -37,6 +37,8 @@ var io = require('socket.io')(http);
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 app.post('/api/change-password', async (req, res) => {
 	const { token, newpassword: plainTextPassword } = req.body
@@ -220,9 +222,8 @@ User.find({ username : req.body.username}, (err, allDetails) => {
         console.log(err);
     } else {
 		console.log(allDetails);
-		//res.json(allDetails)
-		//res.render('/fetchUserDisplay', { list: allDetails} );
-		
+		res.setHeader('Content-Type', 'text/plain');
+		res.render('user-data', { title: 'User List', userData: allDetails});
     }
 })
 

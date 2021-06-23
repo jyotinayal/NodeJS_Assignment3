@@ -2,7 +2,7 @@ const express = require("express");
 const fetchUser = require("../controller/fetchUser");
 var path = require('path');
 const router = express.Router();
-
+var authToken = require('../middleware/authToken');
 
 router.get("/", (req, res, next) => {
 
@@ -12,6 +12,7 @@ router.get("/", (req, res, next) => {
         }
     })
 });
-router.post("/", fetchUser.fetchUserPost)
+//router.post("/", fetchUser.fetchUserPost)
+router.post('/', authToken.authenticateToken, fetchUser.fetchUserPost);
 
 module.exports = router;

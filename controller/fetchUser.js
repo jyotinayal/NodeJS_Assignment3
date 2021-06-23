@@ -16,6 +16,7 @@ class fetchUser {
                 }
                 else {
                     res.send(user)
+                    
                 }
             }
 
