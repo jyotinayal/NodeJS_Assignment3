@@ -19,9 +19,9 @@ var allUsers = require('./route/allUsers');
 var notLoggedIn = require('./route/notLoggedIn');
 
 var useragent = require('express-useragent');
-require('dotenv').config()
-const JWT_SECRET = "jkgsfjwbnfmbwekjgfruiehgdfkjb87576we#kjk4$$$3@"
-//const JWT_SECRET = process.env.JWT_SECRET;
+require('dotenv').config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 
 mongoose.connect('mongodb://localhost:27017/assignment3',{
@@ -31,6 +31,8 @@ mongoose.connect('mongodb://localhost:27017/assignment3',{
 })
 
 const app = express()
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
@@ -121,7 +123,8 @@ app.post('/api/change-password', async (req, res) => {
 // })
 
 app.post('/api/login', async (req, res) => {
-	const { username, password } = req.body
+	const { username, password } = req.body;
+	
 	const user = await User.findOne({ username }).lean()
 
 	if (!user) {
@@ -145,10 +148,10 @@ app.post('/api/login', async (req, res) => {
 		// 	})
 			let clientIp = requestIp.getClientIp(req);
 			let activityDate = moment().format("MM-DD-YYYY");
-			console.log("date",activityDate);
+		//	console.log("date",activityDate);
 			let source = req.headers['user-agent'],
 			ua = useragent.parse(source);
-			console.log("user",ua);
+			//console.log("user",ua);
 
 		// var activity = new activityData();
 			let activity =  UserActivity.create( {
@@ -166,7 +169,7 @@ app.post('/api/login', async (req, res) => {
 
 app.post('/register', async (req, res) => {
 	const { firstname, lastname, username, password: plainTextPassword } = req.body
-
+	
 	if (!username || typeof username !== 'string') {
 		return res.json({ status: 'error', error: 'Invalid username' })
 	}
@@ -203,6 +206,7 @@ app.post('/register', async (req, res) => {
 	res.json({ status: 'ok' })
 })
 
+
 app.use('/fetchUser', fetchUser);
 app.use('/allUsers', allUsers);
 app.use('/notLoggedIn',notLoggedIn);
@@ -211,9 +215,6 @@ app.get('/css', function (req, res) {
 })
 
 app.post('/api/fetch', async (req, res) => {
-
-console.log(req.body.username)
-
 User.find({ username : req.body.username}, (err, allDetails) => {
     if (err) {
         console.log(err);
@@ -227,6 +228,12 @@ User.find({ username : req.body.username}, (err, allDetails) => {
 
 })
 
+
+var clients = 0;
+
+io.on("connection", (socket) => {
+	io.emit("hello", "world");
+  });
 
 app.listen(3000, () => {
 	console.log('Server up at 3000')

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Hello world</title>
+   </head>
+   <script src='https://cdn.socket.io/socket.io-3.0.1.min.js'></script>
+   <script src = "/socket.io/socket.io.js"></script>
+   <script>
+      var io = io();
+      io.on('connection',function() {
+        io.emit('broadcast',{ description: ' clients connected!'});
+
+      });
+
+   </script>
+   <body>Hello !!!<br>
+    <a href="change-password.html">Change Password</a>
+   </body>
+</html>

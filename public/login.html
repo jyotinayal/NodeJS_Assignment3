@@ -40,10 +40,19 @@
 					localStorage.setItem('token', result.data)
 					//localStorage.setItem('userName',username)
 					alert('Success')
+					window.location.replace('home.html')
 				} else {
 					alert("Error"+result.error)
 				}
 			}
 		</script>
+		<script src = "/socket.io/socket.io.js"></script>
+   <script>
+      var socket = io();
+      socket.on('newclientconnect',function(data) {
+         document.body.innerHTML = '';
+         document.write(data.description);
+      });
+   </script>
 	</body>
 </html>
