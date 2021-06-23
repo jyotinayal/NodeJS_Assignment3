@@ -74,55 +74,6 @@ app.post('/api/change-password', async (req, res) => {
 
 
 
-// app.post('/api/login', async (req, res) => {
-// 	const { username, password } = req.body
-// 	const user = await User.findOne({ username }).lean()
-// 	if (!user) {
-// 		return res.json({ status: 'error', error: 'Invalid username/password' })
-// 	}
-
-// 	if (await bcrypt.compare(password, user.password)) {
-// 		// the username, password combination is successful
-
-// 		const token = jwt.sign(
-// 		{
-// 			id: user._id,
-// 			username: user.username
-// 			},
-// 			JWT_SECRET
-// 		)
-
-// 		//  var token = jwt.sign({ id: user._id, username: user.username}, JWT_SECRET,
-//         //         {
-//         //             expiresIn: "2hr"
-//         //         });
-//             // res.send("Succesfully signed up " + req.body.userName);
-//             res.json(
-//                 {
-//                     "token": token,
-//                     "message": "login successful"
-//                 })
-//                 let clientIp = requestIp.getClientIp(req);
-//                 let activityDate = moment().format("MM-DD-YYYY");
-//                 console.log("date",activityDate);
-//                 let source = req.headers['user-agent'],
-//                 ua = useragent.parse(source);
-//                 console.log("user",ua);
-
-//                // var activity = new activityData();
-//                 let activity =  UserActivity.create( {
-//                     userName: username,
-//                     IP : clientIp,
-//                     UA : ua,
-//                     loginDate : activityDate
-//                  })
-// 				 console.log('UserActvity stored successfully: ', activity)
-// 		return res.json({ status: 'ok', data: token })
-// 	}
-
-// res.json({ status: 'error', error: 'Invalid username/password' })
-// }
-// })
 
 app.post('/api/login', async (req, res) => {
 	const { username, password } = req.body;
