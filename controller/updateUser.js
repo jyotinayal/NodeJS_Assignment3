@@ -16,11 +16,8 @@ class updateUser {
                     try {
                   const password =  await bcrypt.hash(req.body.password, 10)
                     user.userName = req.body.userName;
-                   // user.password = req.body.password;
                     user.firstName = req.body.firstName;
-                    user.lastName = req.body.lastName;
-                    //user.password = user.generateash(req.body.password);
-                   
+                    user.lastName = req.body.lastName;           
                     user.password = password;
                     user.save();
                     
@@ -30,7 +27,6 @@ class updateUser {
             }}
             }
         })
-        //console.log("in fetch user post",req.body.userName);
     }
 }
 

@@ -28,6 +28,5 @@ class authToken {
             }
         });
     }
-}
-//export default new authToken(); 
+}; 
 module.exports = new authToken();

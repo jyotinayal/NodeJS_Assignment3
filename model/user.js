@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
- 
-mongoose.connect('mongodb://localhost:27017/assignment3',{
+const path = require('path')
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+const DB_LINK = process.env.DB_LINK;
+mongoose.connect(DB_LINK,{
     userNewUrlParser : true,
     useInifiedTopology : true,
     useCreateIndex : true
