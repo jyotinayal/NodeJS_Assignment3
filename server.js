@@ -4,43 +4,45 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+
 var requestIp = require('request-ip');
 var moment = require('moment');
-const Handlebars = require('handlebars')
-const expressHandlebars = require('express-handlebars');
-
-
-
 const User = require('./model/user')
 const UserActivity = require('./model/userActivity')
-
 var fetchUser = require('./route/fetchUserRoute');
 var allUsers = require('./route/allUsers');
-//var notLoggedIn = require('./route/notLoggedIn');
-
+var notLoggedIn = require('./route/notLoggedIn');
 var useragent = require('express-useragent');
 require('dotenv').config();
 
+const app = express()
 const JWT_SECRET = process.env.JWT_SECRET;
-
-
-mongoose.connect('mongodb://localhost:27017/assignment3', {
-	userNewUrlParser: true,
-	useInifiedTopology: true,
-	useCreateIndex: true
+mongoose.connect('mongodb://localhost:27017/assignment3',{
+    userNewUrlParser : true,
+    useInifiedTopology : true,
+    useCreateIndex : true
 })
 
-const app = express()
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const server = require('http').createServer(app);
+//const io = require('socket.io')(server);
+var io  = require('socket.io')(server, { path: '/ASSIGNMENT3/public/socket.io-client.min.js'});
 
-app.use('/', express.static(path.join(__dirname, 'public')))
+
+app.use('/', express.static(path.join(__dirname, '/public')))
 app.use(bodyParser.json())
-
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
-app.post('/api/change-password', async (req, res) => {
+
+app.get('/change-password', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public' + '/change-password.html'), function (err) {
+        if (err) {
+            console.log(err);
+        }
+    })
+})
+
+app.post('/change-password', async (req, res) => {
 	const { token, newpassword: plainTextPassword } = req.body
 
 	if (!plainTextPassword || typeof plainTextPassword !== 'string') {
@@ -72,12 +74,17 @@ app.post('/api/change-password', async (req, res) => {
 	}
 })
 
+app.get('/login', function (req, res) {
+    res.sendFile(path.join(__dirname + '/public' + '/login.html'), function (err) {
+        if (err) {
+            console.log(err);
+        }
+    })
+})
 
-
-
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
 	const { username, password } = req.body;
-
+	
 	const user = await User.findOne({ username }).lean()
 
 	if (!user) {
@@ -92,37 +99,46 @@ app.post('/api/login', async (req, res) => {
 				id: user._id,
 				username: user.username
 			},
-			JWT_SECRET
+			JWT_SECRET ,
+			{ expiresIn: '60 days' }
 		)
 		// res.json(
 		// 	{
 		// 		"token": token,
 		// 		"message": "login successful"
 		// 	})
-		let clientIp = requestIp.getClientIp(req);
-		let activityDate = moment().format("MM-DD-YYYY");
+			let clientIp = requestIp.getClientIp(req);
+			let activityDate = moment().format("MM-DD-YYYY");
 		//	console.log("date",activityDate);
-		let source = req.headers['user-agent'],
+			let source = req.headers['user-agent'],
 			ua = useragent.parse(source);
-		//console.log("user",ua);
+			//console.log("user",ua);
 
 		// var activity = new activityData();
-		let activity = UserActivity.create({
-			userName: username,
-			IP: clientIp,
-			UA: ua,
-			loginDate: activityDate
-		})
-		console.log('UserActvity stored successfully: ', activity)
+			let activity =  UserActivity.create( {
+				userName: username,
+				IP : clientIp,
+				UA : ua,
+				loginDate : activityDate
+			})
+			console.log('UserActvity stored successfully: ', activity)
+			
+			
 		return res.json({ status: 'ok', data: token })
+
 	}
 
 	res.json({ status: 'error', error: 'Invalid username/password' })
 })
 
+// app.get('/logout',(req,res) => {
+// 	req.logout();
+// 	return res.redirect('/login')
+// })
+
 app.post('/register', async (req, res) => {
 	const { firstname, lastname, username, password: plainTextPassword } = req.body
-
+	
 	if (!username || typeof username !== 'string') {
 		return res.json({ status: 'error', error: 'Invalid username' })
 	}
@@ -142,8 +158,8 @@ app.post('/register', async (req, res) => {
 
 	try {
 		const response = await User.create({
-			firstname,
-			lastname,
+            firstname,
+            lastname,
 			username,
 			password
 		})
@@ -162,29 +178,45 @@ app.post('/register', async (req, res) => {
 
 app.use('/fetchUser', fetchUser);
 app.use('/allUsers', allUsers);
-//app.use('/notLoggedIn',notLoggedIn);
+app.use('/notLoggedIn',notLoggedIn);
 app.get('/css', function (req, res) {
-	res.sendFile(path.join(__dirname + '/public' + 'stylesheet/main.css'))
+    res.sendFile(path.join(__dirname + '/public' + 'stylesheet/main.css'))
 })
 
 app.post('/api/fetch', async (req, res) => {
-	User.find({ username: req.body.username }, (err, allDetails) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log(allDetails);
-			res.setHeader('Content-Type', 'text/plain');
-			res.render('user-data', { title: 'User List', userData: allDetails });
-		}
-	})
+User.find({ username : req.body.username}, (err, allDetails) => {
+    if (err) {
+        console.log(err);
+    } else {
+		console.log(allDetails);
+		res.setHeader('Content-Type', 'text/plain');
+		res.render('user-data', { title: 'User List', userData: allDetails});
+		//res.send(allDetails);
+    }
+})
 
 })
 
 
-var clients = 0;
+// io.of('/login').on('connection', (socket)=>{
+// 	console.log('user connected')
+// 	socket.on('message',(msg)=>{
+// 		console.log('message: '+msg)
+// 		io.emit('message',msg)
+// 	});
 
-io.on("connection", (socket) => {
-	io.emit("hello", "world");
+// 	socket.on('disconnect', ()=>{
+// 		console.log("user disconnected");
+// 		io.emit('message', 'user disconnected')
+// 	})
+
+// })
+
+io
+.of('/login')
+.on('connection', function(socket) {
+   console.log('someone connected');
+	io.emit('hi', 'Hello everyone!');
 });
 
 app.listen(3000, () => {
