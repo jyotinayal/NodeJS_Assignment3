@@ -23,9 +23,9 @@ mongoose.connect('mongodb://localhost:27017/assignment3',{
     useCreateIndex : true
 })
 
-// const server = require('http').createServer(app);
-// const io = require('socket.io')(server);
-// var io  = require('socket.io')(server, { path: '/ASSIGNMENT3/public/socket.io-client.min.js'});
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+//var io  = require('socket.io')(server, { path: '/ASSIGNMENT3/public/socket.io-client.min.js'});
 
 
 app.use('/', express.static(path.join(__dirname, '/public')))
@@ -92,6 +92,8 @@ app.post('/login', async (req, res) => {
 	}
 
 	if (await bcrypt.compare(password, user.password)) {
+		// the username, password combination is successful
+
 		const token = jwt.sign(
 			{
 				id: user._id,
@@ -100,11 +102,19 @@ app.post('/login', async (req, res) => {
 			JWT_SECRET ,
 			{ expiresIn: '60 days' }
 		)
-		
+		// res.json(
+		// 	{
+		// 		"token": token,
+		// 		"message": "login successful"
+		// 	})
 			let clientIp = requestIp.getClientIp(req);
 			let activityDate = moment().format("MM-DD-YYYY");
+		//	console.log("date",activityDate);
 			let source = req.headers['user-agent'],
 			ua = useragent.parse(source);
+			//console.log("user",ua);
+
+		// var activity = new activityData();
 			let activity =  UserActivity.create( {
 				userName: username,
 				IP : clientIp,
@@ -112,12 +122,19 @@ app.post('/login', async (req, res) => {
 				loginDate : activityDate
 			})
 			console.log('UserActvity stored successfully: ', activity)
+			
+			
 		return res.json({ status: 'ok', data: token })
 
 	}
 
 	res.json({ status: 'error', error: 'Invalid username/password' })
 })
+
+// app.get('/logout',(req,res) => {
+// 	req.logout();
+// 	return res.redirect('/login')
+// })
 
 app.post('/register', async (req, res) => {
 	const { firstname, lastname, username, password: plainTextPassword } = req.body
@@ -174,7 +191,7 @@ User.find({ username : req.body.username}, (err, allDetails) => {
 		console.log(allDetails);
 		res.setHeader('Content-Type', 'text/plain');
 		res.render('user-data', { title: 'User List', userData: allDetails});
-		
+		//res.send(allDetails);
     }
 })
 
@@ -194,6 +211,18 @@ User.find({ username : req.body.username}, (err, allDetails) => {
 // 	})
 
 // })
+
+// io
+// .of('/login')
+// .on('connection', function(socket) {
+//    console.log('someone connected');
+// 	io.emit('hi', 'Hello everyone!');
+// });
+
+io.of('/login').on('connection', function(client) {
+    console.log('Client connected...');
+    io.emit('hi', 'Hello everyone!');
+});
 
 app.listen(3000, () => {
 	console.log('Server up at 3000')
