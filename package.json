@@ -28,6 +28,7 @@
     "moment": "^2.29.1",
     "mongoose": "^5.12.13",
     "node-localstorage": "^2.2.1",
+    "nodemon": "^2.0.9",
     "passport": "^0.4.1",
     "path": "^0.12.7",
     "request-ip": "^2.1.3",
