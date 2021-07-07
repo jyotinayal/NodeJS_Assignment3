@@ -6,9 +6,12 @@ const User = require('../model/user');
 var userActivity = require('../model/userActivity');
 const app = express();
 app.use(bodyParser.json());
+
+require('dotenv').config();
+const DAYS = process.env.DAYS;
 router.get("/", async(req, res, next) => {
     var date = new Date();
-    date.setDate(date.getDate() - 5);
+    date.setDate(date.getDate() - DAYS);
     var dateString = moment(date). format('MM-DD-YYYY');
     try
     {
