@@ -1,6 +1,7 @@
 doctype html
 html
     head
+     link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
      script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
      script
         include ../public/signUpRequest.js
@@ -9,7 +10,7 @@ html
         div(class="col-sm-4 col-sm-offset-4 well")  
             form 
                 div(class="form-group") 
-                    label(for="email") Username:
+                    label(for="email" ) Username:
                     input(type="email" class="form-control" id="email" name="email")
 
                 div(class="form-group") 
@@ -25,6 +26,6 @@ html
                     input(type="password" class="form-control" id="pwd")
                                 
                 button(class="btn btn-success" onclick="signUp(event)") Submit
-                a(href='/signIn') Login
+                a(href='/signIn' class="btn btn-default") Login
            
                             

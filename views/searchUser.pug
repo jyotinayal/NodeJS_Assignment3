@@ -2,6 +2,7 @@ doctype html
 html
   head
     title= "NodeJs App"
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")  
     script
      include ../public/searchUser.js       
@@ -9,11 +10,11 @@ html
 
   body 
         |   <form>
-        |        <div>
+        |        <div class="form-group">
         |            <label for="email">Email address:</label>
-        |            <input type="email" id="email" placeholder = "Enter email to search ">
+        |            <input type="email" id="email" placeholder = "Enter email to search " class="form-control">
         |        </div>
-        |        <button type="button" onclick="searchUser()">Submit</button>
+        |        <button type="button" onclick="searchUser()" class="btn btn-success">Submit</button>
         |    </form>
         |<div class="">
         |<div class="card" id="profilecard">
