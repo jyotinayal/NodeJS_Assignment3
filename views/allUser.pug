@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    title= "NodeJs App"
+    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    script
+     include ../public/fetchAllUsers.js     
+  body(onload="allUsers()")
+        |     <ul class="nav navbar-nav">
+        |       <li><a href="/home">  Home</a></li>
+        |       <li><a href="/updateuser">Update</a></li>
+        |       <li><a href='/searchuser'> Search User</a></li>
+        |       <li><a href="/signin"> Logout</a></li>
+        |     </ul>
+        |     <table id="listtable" class="table table-bordered" >
+        |            <thead>
+        |                <tr>
+        |                    <th>Sr.No.</th>
+        |                    <th>First Name</th>
+        |                    <th>Last Name</th>
+        |                    <th>Username</th>
+        |                </tr>
+        |            </thead>
+        |            <tbody>
+        |            </tbody>
+        |        </table> 
