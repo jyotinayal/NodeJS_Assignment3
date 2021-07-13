@@ -7,10 +7,15 @@ $(document).ready(function () {
             url: "http://localhost:3000/searchUser",
             method: "POST",
             data: {
-                username: document.getElementById('email').value
+                username: document.getElementById('email').value,
+                userToken: localStorage.getItem('token')
             },
             success: (result) => {
-                if (result === null) {
+                if( result.error === 'Not authorized user')
+                {
+                    window.location.replace('/signIn');
+                }
+                else if (result === null) {
                     alert("User Not Found");
                 }
 

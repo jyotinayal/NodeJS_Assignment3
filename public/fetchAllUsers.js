@@ -8,7 +8,11 @@ allUsers = () => {
         },
         success: (result) => {
 
-            if(result.success) {
+            if( result.error === 'Not authorized user')
+                {
+                    window.location.replace('/signIn');
+                }
+                else if(result.success) {
                 
             for (append = 0; append < result.users.length; append++) {
             

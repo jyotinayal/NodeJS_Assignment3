@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var routes = require('./routes/routes');
+var boom = require('express-boom');
 
 const app = express();
  app.set('views', path.join(__dirname, 'views'));
