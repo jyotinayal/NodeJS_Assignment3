@@ -3,12 +3,13 @@ const router = express.Router();
 const controllers = require('../controllers/controllers');
 const validate = require('../middleware/validation');
 const authToken = require('../middleware/authToken');
+const { check } = require('express-validator/check');
 
 router.get('/', (req, res, next) => { res.render('signUp') });
 router.get('/signup', (req, res, next) => { res.render('signUp') });
-router.post('/signup',validate.validateUserData, controllers.signUp);
+router.post('/signup',validate.validateRegUserData, controllers.signUp);
 router.get('/signin', (req, res, next) => { res.render('signIn') });
-router.post('/signin', controllers.signIn);
+router.post('/signin',validate.validateLoginUserData, controllers.signIn);
 router.get('/home', (req, res, next) => { res.render('home') });
 router.post('/home', (req, res, next) => { res.render('home') });
 router.get('/searchuser', (req, res, next) => { res.render('searchUser') });

@@ -21,10 +21,9 @@ signUp = (event) => {
            window.location.replace('/signin');
        }
         else {
-            alert("Please fill all the details carefully");
-            window.location.replace('/signup');            
+            alert("Please fill :- "+result.data);            
         }
-   }      
+    }      
     });
    
 }

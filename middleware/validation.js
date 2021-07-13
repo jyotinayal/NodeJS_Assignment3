@@ -1,40 +1,43 @@
 const joi = require('joi');
 
-const requiredSchema = joi.object({
-    username: joi.string().required(),
-    firstname: joi.string().required(),
-    lastname: joi.string().required(),
+const requiredRegisterSchema = joi.object({
+    username: joi.string().required().min(3).max(15),
+    firstname: joi.string().required().min(2),
+    lastname: joi.string().required().min(2),
     password: joi.string().required().min(3).max(10)
 })
 
- // schema options
+const requiredLoginSchema = joi.object({
+    username: joi.string().required().min(3).max(15),
+    password: joi.string().required().min(3).max(10)
+})
+
  const options = {
-    abortEarly: false, // include all errors
-    allowUnknown: true, // ignore unknown props
-    stripUnknown: true // remove unknown props
+    abortEarly: false, 
+    allowUnknown: true, 
+    stripUnknown: true 
 };
 
 class validate {
-    validateUserData(req,res,next) {
-
-        if(req.body.username.length<1 || req.body.username.length<1 )    {
-            res.json({success: false});
-        }
-
-        const { error, value } = requiredSchema.validate(req.body, options);
-       
+    validateRegUserData(req,res,next) {
+        const { error, value } = requiredRegisterSchema.validate(req.body, options);
         if (error) {
-            // on fail return comma separated errors
-          next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+            const err_data = error.details.map(x => x.message).join(', ');
+            res.json({data : err_data});
         } else {
-            // on success replace req.body with validated value and trigger next middleware function
             req.body = value;
             next();
         }
-        // const validation = requiredSchema.validate({username:req.body.username, firstname:req.body.firstname,lastname:req.body.lastname,password:req.body.password})
-        // console.log(validation)
-        // res.send(validation)
-
+    }
+    validateLoginUserData(req,res,next) {
+        const { error, value } = requiredLoginSchema.validate(req.body, options);
+        if (error) {
+            const err_data = error.details.map(x => x.message).join(', ');
+            res.json({data : err_data , error : 'Fill All Details' });
+        } else {
+            req.body = value;
+            next();
+        }
     }
 }
 
