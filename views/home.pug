@@ -2,21 +2,27 @@ doctype html
 html
   head
     title= "NodeJs App"
-    link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     script
      include ../public/signUpRequest.js  
     script
      include ../public/signInRequest.js  
-     
   body
-           <div >
-             <ul >
-               <li ><a href="home">Home</a></li>
-               <li><a href="/updateuser">Update</a></li>
-               <li><a href="/searchuser">Search User</a></li>
-               <li><a href="/signin"> Logout</a></li>
-             </ul>
-           </div>
-        
-  
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">NodeJSAssignment</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/home">Home</a></li>
+            <li><a href="/allUser">All User</a></li>
+            <li><a href="/updateuser">Update User</a></li>
+            <li><a href="/searchuser">Search User</a></li>
+            <li><a href='/notLoggedIn'>Not LoggedIN</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </div>
+      </nav>           

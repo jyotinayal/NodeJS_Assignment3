@@ -20,4 +20,5 @@ router.get('/updateuser', (req, res, next) => { res.render('updateUser'); });
 router.put('/updateuser', controllers.updateUser);
 router.get('/notLoggedIn', (req, res, next) => { res.render('notLoggedIn'); });
 router.post('/notLoggedIn', authToken.authenticateToken,controllers.notLoggedIn);
+router.get('/logout', controllers.logout);
 module.exports = router;

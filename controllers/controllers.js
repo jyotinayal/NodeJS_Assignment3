@@ -131,6 +131,11 @@ class Controllers {
          }
     }
 
+    logout(req,res,next){
+        localStorage.removeItem('token');
+        res.render('signIn');
+    }
+
    
 }
 

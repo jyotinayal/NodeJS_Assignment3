@@ -7,16 +7,30 @@ html
     script
      include ../public/notLoggedIn.js     
   body(onload="notLoggedIn()")
-        | 
-        | <div class="container">  
-        |  <table id="listtable" class="table table-bordered" >
-        |            <thead>
-        |                <tr>
-        |                    <th>Sr.No.</th>
-        |                    <th>Username</th>
-        |                </tr>
-        |            </thead>
-        |            <tbody>
-        |            </tbody>
-        |        </table> 
-        |</div> 
+          <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <a class="navbar-brand" href="#">NodeJSAssignment</a>
+                  </div>
+                  <ul class="nav navbar-nav">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href='/allUser'>All User</a></li>
+                    <li><a href="/updateuser">Update User</a></li>
+                    <li><a href="/searchuser">Search User</a></li>
+                    <li class="active"><a href='/notLoggedIn'>NotLoggedIN</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                  </ul>
+                </div>
+          </nav>
+          <div class="container">  
+           <table id="listtable" class="table table-bordered" >
+                     <thead>
+                         <tr>
+                             <th>Sr.No.</th>
+                             <th>Username</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                     </tbody>
+           </table> 
+          </div> 

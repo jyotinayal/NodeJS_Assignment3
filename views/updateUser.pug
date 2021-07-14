@@ -12,23 +12,32 @@ html
      include ../public/updateUser.js 
         
   body(onload="getUser()")
-             <h1>Update User</h1>   
-             form 
-                div(class="form-group ") 
-                    label(for="email") Email address:
-                    p(type="email"  id="userName" name="userName")
-
-                div(class="form-group") 
-                    label(for="fname") First Name:
-                    input(type="text" class="form-control" id="firstName" name="firstName" )
-
-                div(class="form-group") 
-                    label(for="lname") Last Name:
-                    input(type="text" class="form-control" id="lastName" name="lastName" )
-         
-                button(class="btn btn-success" type="button" onclick="updateUser()") Update
-
-                <ul>
-                    <li><a href="home"></span> Home</a></li>
-                    <li><a href="/signin"></span> Logout</a></li>
-                </ul>
+             <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                  <div class="navbar-header">
+                    <a class="navbar-brand" href="#">NodeJSAssignment</a>
+                  </div>
+                  <ul class="nav navbar-nav">
+                    <li><a href="/home">Home</a></li>
+                    <li><a href='/allUser'>All User</a></li>
+                    <li class="active"><a href="/updateuser">Update User</a></li>
+                    <li><a href="/searchuser">Search User</a></li>
+                    <li><a href='/notLoggedIn'>NotLoggedIN</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                  </ul>
+                </div>
+             </nav>
+             <h2>Update User</h2>
+             div.container  
+                div(class="col-sm-4 col-sm-offset-4 well") 
+                    form 
+                        div(class="form-group ") 
+                            label(for="email") Email address:
+                            p(type="email"  id="userName" name="userName")
+                        div(class="form-group") 
+                            label(for="fname") First Name:
+                            input(type="text" class="form-control" id="firstName" name="firstName" )
+                        div(class="form-group") 
+                            label(for="lname") Last Name:
+                            input(type="text" class="form-control" id="lastName" name="lastName" )
+                        button(class="btn btn-success" type="button" onclick="updateUser()") Update
