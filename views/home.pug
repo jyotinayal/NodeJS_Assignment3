@@ -6,10 +6,14 @@ html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src = "/socket.io/socket.io.js"></script>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
     script
      include ../public/signUpRequest.js  
     script
-     include ../public/signInRequest.js  
+     include ../public/signInRequest.js
+    script 
+      include ../public/home.js   
   body
       <nav class="navbar navbar-inverse">
         <div class="container-fluid">
@@ -25,4 +29,6 @@ html
             <li><a href="/logout">Logout</a></li>
           </ul>
         </div>
-      </nav>           
+      </nav>
+      <div id="list">
+      </div>   

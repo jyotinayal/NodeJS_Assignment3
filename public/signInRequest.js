@@ -1,4 +1,6 @@
+
 signIn = (event) => {
+
     event.preventDefault();
     var username= $('#email').val();
     var password = $('#pwd').val();
@@ -13,7 +15,8 @@ signIn = (event) => {
             if (result.status === 'ok') {
                 localStorage.setItem("token", result.data);
                 localStorage.setItem("username", username);
-                    window.location.replace('/home');
+                window.location.replace('/home');
+               
             }
             else if(result.error === 'Fill All Details'){
                 alert("All Fields Are Compulsory");
