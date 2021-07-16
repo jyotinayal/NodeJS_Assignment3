@@ -1,15 +1,15 @@
 const joi = require('joi');
 
 const requiredRegisterSchema = joi.object({
-    username: joi.string().required().min(3).max(15),
+    username: joi.string().email().required().min(3).max(25),
     firstname: joi.string().required().min(2),
     lastname: joi.string().required().min(2),
-    password: joi.string().required().min(3).max(10)
+    password: joi.string().required().min(3).max(15)
 })
 
 const requiredLoginSchema = joi.object({
-    username: joi.string().required().min(3).max(15),
-    password: joi.string().required().min(3).max(10)
+    username: joi.string().required().min(3).max(25),
+    password: joi.string().required().min(3).max(15)
 })
 
  const options = {

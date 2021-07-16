@@ -29,7 +29,6 @@ notLoggedIn = () => {
                 let emailColumnText = document.createTextNode(result.users[append].username);
                 emailColumn.appendChild(emailColumnText);
                 document.getElementById("listtr" + append).appendChild(emailColumn);
-
             }
         }
 

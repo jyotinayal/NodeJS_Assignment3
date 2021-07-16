@@ -14,25 +14,22 @@ class Controllers {
 
     async signIn(req,res, next) {
             const { username, password } = req.body;
-            const user = await userData.findOne({ username }).lean()
-        
+            try{
+            const user =  await userData.findOne({ username }).lean();
             if (!user) {
                 return res.json({ status: 'error', error: 'Invalid username/password' })
-            }
-        
+            }      
             if (await bcrypt.compare(password, user.password)) {
-                // the username, password combination is successful
-        
                 const token = jwt.sign(
                     {
                         id: user._id,
                         username: user.username
                     },
                     JWT_SECRET ,
-                    { expiresIn: '60 days' }
+                    { expiresIn: '24h' }
                 )
                     let clientIp = requestIp.getClientIp(req);
-                    let activityDate = moment().format("MM-DD-YYYY");
+                    let activityDate = new Date().toISOString()
                     let source = req.headers['user-agent'],
                     ua = useragent.parse(source);
                     let activity =  UserActivity.create( {
@@ -41,14 +38,14 @@ class Controllers {
                         UA : ua,
                         loginDate : activityDate
                     })
-                    console.log('UserActvity stored successfully: ', activity)
-                    
-                    
                 return res.json({ status: 'ok', data: token })
-        
             }
             res.json({ status: 'error', error: 'Invalid username/password' })
         }
+        catch(err){
+            console.log(err)
+        }
+    }
 
     async signUp(req,res,next){
         const { firstname, lastname, username, password: plainTextPassword } = req.body
@@ -119,23 +116,17 @@ class Controllers {
     async notLoggedIn(req,res,next){
         var date = new Date();
         date.setDate(date.getDate() - DAYS);
-        var dateString = moment(date). format('MM-DD-YYYY');
+        var dateString=date.toISOString();
         try
         {
             const un_activity = await UserActivity.find({'loginDate':{$gte: dateString}},{userName: 1, _id: 0})
-            const result = await userData.find({ "username" : {$nin: [un_activity.userName]}},{username : 1, _id:0});
+            const result = await userData.find({ "username" : {$nin: un_activity.map(x => x.userName)}},{username : 1, _id:0});
             res.json({ success: true, users: result });
         }
          catch(error){
               console.log(error)
          }
     }
-
-    logout(req,res,next){
-        localStorage.removeItem('token');
-        res.render('signIn');
-    }
-
    
 }
 
