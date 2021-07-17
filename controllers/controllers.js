@@ -12,14 +12,16 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const DAYS = process.env.DAYS;
 class Controllers {
 
-    async signIn(req,res, next) {
-            const { username, password } = req.body;
-            try{
+    async signIn(req,res, next) 
+    {
+        const { username, password } = req.body;
+        try
+        {
             const user =  await userData.findOne({ username }).lean();
-            if (!user) {
+            if(!user){
                 return res.json({ status: 'error', error: 'Invalid username/password' })
             }      
-            if (await bcrypt.compare(password, user.password)) {
+            if(await bcrypt.compare(password, user.password)) {
                 const token = jwt.sign(
                     {
                         id: user._id,
@@ -28,19 +30,37 @@ class Controllers {
                     JWT_SECRET ,
                     { expiresIn: '24h' }
                 )
-                    let clientIp = requestIp.getClientIp(req);
-                    let activityDate = new Date().toISOString()
-                    let source = req.headers['user-agent'],
-                    ua = useragent.parse(source);
-                    let activity =  UserActivity.create( {
-                        userName: username,
-                        IP : clientIp,
-                        UA : ua,
-                        loginDate : activityDate
-                    })
-                return res.json({ status: 'ok', data: token })
+                let clientIp = requestIp.getClientIp(req);
+                let activityDate = new Date().toISOString();
+                let source = req.headers['user-agent'];
+                let ua = useragent.parse(source);
+                UserActivity.findOne({ userName: username }, (err, person) => {
+                    if (err) {
+                        res.json({status : 'error', error :'User Not Found'});
+                    }
+                    else if (person === null) {
+                        
+                        let activity =  UserActivity.create( {
+                            userName: username,
+                            IP : clientIp,
+                            UA : ua,
+                            loginDate : activityDate
+                        });
+                        res.json({ status: 'ok', data: token })
+                    }
+                    else if (person != null) {                
+                        let currentTime = new Date().toISOString();
+                        UserActivity.findOneAndUpdate({ userName: username }, { loginDate: currentTime }, { new: true } ,(err, result) => {
+                            if(err){
+                                res.json({status : 'error', error :'Error occured'});
+                            }
+                            else{
+                                res.json({ status: 'ok', data: token });
+                            }
+                        });
+                    }
+                });
             }
-            res.json({ status: 'error', error: 'Invalid username/password' })
         }
         catch(err){
             console.log(err)
