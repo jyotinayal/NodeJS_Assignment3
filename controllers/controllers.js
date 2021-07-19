@@ -30,6 +30,7 @@ class Controllers {
                     JWT_SECRET ,
                     { expiresIn: '24h' }
                 )
+            
                 let clientIp = requestIp.getClientIp(req);
                 let activityDate = new Date().toISOString();
                 let source = req.headers['user-agent'];

@@ -14,7 +14,6 @@ signIn = (event) => {
         success: (result) => {
             if (result.status === 'ok') {
                 localStorage.setItem("token", result.data);
-                localStorage.setItem("username", username);
                 window.location.replace('/home');
                
             }
