@@ -1,4 +1,8 @@
+
 var socket = io();
-        socket.on('broadcast',function(data) {  
-           document.getElementById('list').innerText = data.description;
+        socket.on('posts',function(data) {  
+           document.getElementById('list').innerText =  data.post;
         });
+
+       
+    

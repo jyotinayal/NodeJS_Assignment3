@@ -19,7 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator());
+//app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({secret: 'max', saveUninitialized: false, resave: false}));
@@ -29,14 +29,6 @@ app.use('/', routes);
 const server = app.listen(3000, () => {
 	console.log('Server up at 3000')
 })
-var io = require('socket.io')(server);
-var clients = 0;
-io.on('connection', function(socket) {
-   clients++;
-   io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
-   socket.on('disconnect', function () {
-      clients--;
-      io.sockets.emit('broadcast',{ description: clients + ' clients connected!'});
-   });
-});
+const io = require('./socket').init(server);
+
 

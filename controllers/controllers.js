@@ -6,7 +6,7 @@ var useragent = require('express-useragent');
 var userData = require('../models/user');
 const UserActivity = require('../models/userActivity');
 const { validationResult } = require('express-validator/check');
-
+const io = require('../socket');
 require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const DAYS = process.env.DAYS;
@@ -15,6 +15,7 @@ class Controllers {
     async signIn(req,res, next) 
     {
         const { username, password } = req.body;
+        
         try
         {
             const user =  await userData.findOne({ username }).lean();
@@ -47,6 +48,7 @@ class Controllers {
                             UA : ua,
                             loginDate : activityDate
                         });
+                        io.getIO().emit('posts', {action: 'create', post : 'new user logged in'});
                         res.json({ status: 'ok', data: token })
                     }
                     else if (person != null) {                
@@ -56,6 +58,7 @@ class Controllers {
                                 res.json({status : 'error', error :'Error occured'});
                             }
                             else{
+                                io.getIO().emit('posts', {action: 'create', post : 'New User logged in'});
                                 res.json({ status: 'ok', data: token });
                             }
                         });
